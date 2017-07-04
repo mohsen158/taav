@@ -16,5 +16,14 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+Route::get('/testmodel',function ()
+{
 
+   $mem = \App\Member::find(1);
+   $user= \Illuminate\Support\Facades\Auth::user();
+   $step= $user->step;
+///  $step->prerequisites()->save($step);
+   return $step->prerequisites()->get();
+
+});
 Route::get('/home', 'HomeController@index')->name('home');
