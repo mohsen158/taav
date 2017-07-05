@@ -24,7 +24,7 @@ class Step extends Model
 
     public function members()
     {
-        return $this->belongsToMany('App\Member');
+        return $this->belongsToMany('App\Member')->withPivot('arrivalTime','startTime', 'endTime', 'status');
     }
 
     public function user()

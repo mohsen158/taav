@@ -16,14 +16,25 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-Route::get('/testmodel',function ()
+Route::get('testListActivity',function ()
 {
 
+    $user=\Illuminate\Support\Facades\Auth::user();
+    $stp=$user->step;
+    $mem= $stp->members;
+    //return $mem[0]->pivot->endTime;
+    return view('listActivity',['list'=>$mem]);
+
+});
+
+Route::get('/testmodel',function ()
+{
+   // return view('index');
    $mem = \App\Member::find(1);
    $user= \Illuminate\Support\Facades\Auth::user();
    $step= $user->step;
-///  $step->prerequisites()->save($step);
-   return $step->prerequisites()->get();
+$mem->steps()->attach($step);
+   return 1;
 
 });
 Route::get('/home', 'HomeController@index')->name('home');
