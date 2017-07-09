@@ -16,7 +16,7 @@ class CreateMemberStepTable extends Migration {
 			$table->time('arrivalTime')->nullable();
 			$table->time('startTime')->nullable();
 			$table->time('endTime')->nullable();
-			$table->string('status')->nullable();
+			$table->string('status')->nullable()->default("Pending");
 		});
 	}
 
