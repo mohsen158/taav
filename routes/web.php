@@ -68,4 +68,11 @@ Route::get('/testmodel', function () {
     return 1;
 
 });
+Route::get('/test', function (){
+
+    $m= Member::all()->first();
+    $m=Step::all()->first()->members()->first();
+    $s=Step::all()->first();
+    event(new \App\Events\updateStatus($s,$m));
+});
 Route::get('/home', 'HomeController@index')->name('home');
