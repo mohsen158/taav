@@ -15,7 +15,7 @@ class Step extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = array('title', 'duration');
-    protected $visible = array('title');
+    protected $visible = array('title','id');
 
     public function prerequisites()
     {

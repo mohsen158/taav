@@ -20,5 +20,9 @@ class Member extends Model
     {
         return $this->belongsToMany('App\Step')->withPivot('arrivalTime','startTime', 'endTime', 'status');
     }
+    public function activities()
+    {
+        return $this->hasMany('App\Activity');
+    }
 
 }

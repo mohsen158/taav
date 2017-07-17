@@ -11,6 +11,7 @@
 |
 */
 
+use App\Activity;
 use App\Member;
 use App\Step;
 
@@ -27,38 +28,10 @@ Route::get('testListActivity', function () {
     return view('listActivity', ['list' => $mem]);
 
 });
-Route::get('start/{member}/{step}', function (Member $member, Step $step) {
-
-    $fg = $member->steps()->updateExistingPivot($step->id, ['startTime' => \Carbon\Carbon::now(),
-        'status' => "Progress"
-    ]);
-
-    return back();
-
-});
-Route::get('done/{member}/{step}', function (Member $member, Step $step) {
-
-
-    $fg= $member->steps()->updateExistingPivot($step->id,['EndTime'=> \Carbon\Carbon::now(),
-        'status'=>"Done"
-    ]);
-
-    $list = ( Step::all());
-    $list2 = $member->steps()->get();
-        $list = $list->diff($list2);
-
-
-    return view('selectNextStep', ['member' => $member, 'step' => $step, 'list' => $list]);
-//    return back();
-
-});
-Route::get('newStep/{member}/{step}', function (Member $member, Step $step) {
-
-
-    $member->steps()->attach($step);
-
-
-});
+Route::get('start/{member}/{step}', 'leader@start');
+Route::post('done/{member}/{step}','leader@done');
+Route::post('remainingSteps/{member}','leader@remainingSteps');
+Route::get('newStep/{member}/{step}', 'leader@newStep');
 Route::get('/testmodel', function () {
     // return view('index');
     $mem = \App\Member::find(1);
@@ -66,13 +39,24 @@ Route::get('/testmodel', function () {
     $step = $user->step;
     $mem->steps()->attach($step);
     return 1;
+});
+Route::get('/test', function () {
+    $m = Member::all()->first();
+    $s = Step::all()->first();
+    $a = \App\Activity::all()->first();
+    event(new \App\Events\updateStatus($s, $m, $a));
+});
+Route::get('/csrf',function ()
+{
+
+    return csrf_token();
 
 });
-Route::get('/test', function (){
-
-    $m= Member::all()->first();
-    $m=Step::all()->first()->members()->first();
-    $s=Step::all()->first();
-    event(new \App\Events\updateStatus($s,$m));
+Route::get('testAdd/{member}/{step}',function (Member $member,Step $step)
+{
+    $updateActivity= Activity::with('member','step')->where(['member_id'=>$member->id,'step_id'=>$step->id ])->firstorfail() ;
+    event(new \App\Events\add($member,$step));
 });
+Route::post('/getSteps', 'leader@getSteps');
+Route::post('/getActivities', 'leader@getActivities');
 Route::get('/home', 'HomeController@index')->name('home');

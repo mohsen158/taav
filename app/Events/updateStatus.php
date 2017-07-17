@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Activity;
 use App\Member;
 use App\Step;
 use Illuminate\Broadcasting\Channel;
@@ -21,13 +22,14 @@ class updateStatus implements  ShouldBroadcast
      *
      * @return void
      */
-    public $step;
-    public $member;
-    public function __construct(Step $s,Member $m)
+
+    public $activity;
+    public function __construct( Activity $a)
     {
         //
-        $this->member=$m->pivot;
-        $this->step=$s;
+
+        $this->activity=$a;
+
     }
 
     /**
